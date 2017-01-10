@@ -1,0 +1,39 @@
+group 'MySQL2Neo4J'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.2.RELEASE")
+    }
+}
+
+jar {
+    baseName = 'm2n'
+    version =  '0.0.1'
+}
+configurations {
+    providedRuntime
+}
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-configuration-processor")
+    compile 'mysql:mysql-connector-java:5.1.40'
+    compile group: 'commons-io', name: 'commons-io', version: '2.4'
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+}

@@ -1,0 +1,7 @@
+<div class="list-group">
+    <a ng-repeat="table in $ctrl.tables" ng-click="$ctrl.nextStep(this);"
+       class="{{$ctrl.label.elements[table]? 'list-group-item active':'list-group-item'}}">
+        {{table}}
+        <span class="badge">{{$ctrl.label.elements[table]? $ctrl.label.elements[table].columnCount : 0}}</span>
+    </a>
+</div>

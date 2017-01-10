@@ -1,0 +1,69 @@
+<div>
+    <a class="btn btn-primary" ng-click="$ctrl.goToTables()">Back to table listing</a>
+</div>
+<div class="row panel" style="padding-top:8px;padding-bottom:8px;">
+    <div class="col-md-6">
+        <h2>{{$ctrl.tablename}}</h2>
+    </div>
+    <div ng-if="$ctrl.label.elements[$ctrl.tablename]" class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                Table join type
+                <select ng-model="$ctrl.label.elements[$ctrl.tablename].type">
+                    <option value="join">string [1 to 1]</option>
+                    <option value="json">json [1 to many]</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="list-group">
+    <span ng-repeat="column in $ctrl.columns" class="list-group-item">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-md-12">
+                        <span ng-if="column.primary" class="glyphicon glyphicon-flash" aria-hidden="true"></span>
+                        <b>{{column.name}}</b>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><i>{{column.type}}</i></div>
+                    <div class="col-md-2">{{column.index?'indexed':''}}</div>
+                    <div ng-if="$ctrl.label.elements[$ctrl.tablename].columns[column.name]!=undefined" class="col-md-4">
+                        <input class="form-control" ng-if="$ctrl.label.elements[$ctrl.tablename].include[column.name]" type="text" ng-model="$ctrl.label.elements[$ctrl.tablename].columns[column.name]" name="column.name" value="{{$ctrl.label.elements[$ctrl.tablename].columns[column.name]}}" ng-keydown="$ctrl.saveNewName(column.name, this)">
+                    </div>
+                    <div ng-if="$ctrl.label.elements[$ctrl.tablename].columns[column.name]!=undefined" class="col-md-3" style="text-align:center;">
+                        <label>
+                            <input type="checkbox" ng-model="$ctrl.label.elements[$ctrl.tablename].include[column.name]" ng-true-value="true" ng-false-value="false"> Included?
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div ng-if="
+                    $ctrl.label.elements[$ctrl.tablename].columns[column.name]!=undefined &&
+                    $ctrl.label.mainTable!=$ctrl.tablename &&
+                    (
+                        $ctrl.label.elements[$ctrl.tablename].reference=='' ||
+                        $ctrl.label.elements[$ctrl.tablename].reference.split(',')[0]==column.name
+                    )
+                    " class="col-md-12 text-center">
+                        Relation to main table <select ng-model="$ctrl.label.elements[$ctrl.tablename].reference">
+                            <option selected value="">Select relation to main table</option>
+                            <option ng-repeat="(mainColumn, newName) in $ctrl.label.elements[$ctrl.label.mainTable].columns" value="{{column.name}},{{mainColumn}}">
+                                {{mainColumn}} [ {{newName}} ]
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 text-right">
+
+                <h2><span ng-if="$ctrl.label.elements[$ctrl.tablename].columns[column.name]==undefined" class="glyphicon glyphicon-unchecked" ng-click="$ctrl.label.add($ctrl.tablename,column.name)" aria-hidden="true"></span></h2>
+                <h2><span ng-if="$ctrl.label.elements[$ctrl.tablename].columns[column.name]!=undefined" class="glyphicon glyphicon-check"  ng-click="$ctrl.label.remove($ctrl.tablename,column.name)" aria-hidden="true"></span></h2>
+                <h2><span style="color:#{{$ctrl.label.key==column.name?'3dae62':'cdcdcd'}}" ng-if="$ctrl.label.elements[$ctrl.tablename].columns[column.name]!=undefined &&  && $ctrl.label.mainTable==$ctrl.tablename && ($ctrl.label.key=='' || $ctrl.label.key==column.name)" ng-click="$ctrl.label.toggleKey($ctrl.tablename,column.name)" class="glyphicon glyphicon-certificate" aria-hidden="true"></span></h2>
+
+            </div>
+        </div>
+    </span>
+</div>
