@@ -14,7 +14,7 @@ angular.module('m2n.selectAction', [])
                     $rootRouter.navigate(['/Label', "LabelSetting"]);
                 }
                 self.relations = function(){
-                    $rootRouter.navigate(['/Relatioship', "RelationshipSetting"]);
+                    $rootRouter.navigate(['/Relationship', "RelationshipView"]);
                 }
             }
         ]

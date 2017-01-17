@@ -61,7 +61,7 @@
 
                 <h2><span ng-if="$ctrl.label.elements[$ctrl.tablename].columns[column.name]==undefined" class="glyphicon glyphicon-unchecked" ng-click="$ctrl.label.add($ctrl.tablename,column.name)" aria-hidden="true"></span></h2>
                 <h2><span ng-if="$ctrl.label.elements[$ctrl.tablename].columns[column.name]!=undefined" class="glyphicon glyphicon-check"  ng-click="$ctrl.label.remove($ctrl.tablename,column.name)" aria-hidden="true"></span></h2>
-                <h2><span style="color:#{{$ctrl.label.key==column.name?'3dae62':'cdcdcd'}}" ng-if="$ctrl.label.elements[$ctrl.tablename].columns[column.name]!=undefined &&  && $ctrl.label.mainTable==$ctrl.tablename && ($ctrl.label.key=='' || $ctrl.label.key==column.name)" ng-click="$ctrl.label.toggleKey($ctrl.tablename,column.name)" class="glyphicon glyphicon-certificate" aria-hidden="true"></span></h2>
+                <h2><span style="color:#{{$ctrl.label.key==column.name?'3dae62':'cdcdcd'}}" ng-if="$ctrl.label.elements[$ctrl.tablename].columns[column.name]!=undefined && $ctrl.label.mainTable==$ctrl.tablename && ($ctrl.label.key==undefined || $ctrl.label.key=='' || $ctrl.label.key==column.name)" ng-click="$ctrl.label.toggleKey($ctrl.tablename,column.name)" class="glyphicon glyphicon-certificate" aria-hidden="true"></span></h2>
 
             </div>
         </div>

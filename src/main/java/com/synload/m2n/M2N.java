@@ -20,7 +20,7 @@ import java.sql.DriverManager;
 public class M2N  extends SpringBootServletInitializer {
     public static Connection connect;
     public static void main(String[] args) throws Exception{
-        connect = DriverManager.getConnection("jdbc:mysql://192.168.31.233/api?user=root&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8");
+        connect = DriverManager.getConnection("jdbc:mysql://192.168.0.33/api?user=root&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8");
         SpringApplication.run(M2N.class,args);
     }
     @Override

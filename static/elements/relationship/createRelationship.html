@@ -1,0 +1,51 @@
+<div class="panel panel-default topMargin">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Create Relationship</h1>
+            </div>
+        </div>
+        <br /><br />
+        <div class="row">
+            <div class="col-md-12">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="inputRelationship" class="col-sm-2 control-label">Relationship</label>
+                        <div class="col-sm-10">
+                            <input type="text" ng-model="$ctrl.title" class="form-control" id="inputRelationship" placeholder="Name">
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>From Node</h4>
+                            <div class="list-group">
+                                <a ng-repeat="label in $ctrl.labels" ng-if="label!=$ctrl.objects[1]" ng-click="$ctrl.select(0,label)" class="{{(label==$ctrl.objects[0])?'list-group-item active':'list-group-item'}}">
+                                    {{label.name}}
+                                    <span class="badge">{{(label==$ctrl.objects[0])?"selected":"not selected"}}</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>To Node</h4>
+                            <div class="list-group">
+                                <a ng-repeat="label in $ctrl.labels" ng-if="label!=$ctrl.objects[0]" ng-click="$ctrl.select(1,label)" class="{{(label==$ctrl.objects[1])?'list-group-item active':'list-group-item'}}">
+                                    {{label.name}}
+                                    <span class="badge">{{(label==$ctrl.objects[1])?"selected":"not selected"}}</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                        <div class="col-md-12 text-right">
+                            <button class="btn btn-default" ng-click="$ctrl.got()">Start Conversion</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>

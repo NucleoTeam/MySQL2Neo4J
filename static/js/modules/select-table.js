@@ -74,9 +74,7 @@ angular.module('m2n.selectMysqlTable', ["m2n.neo4j.label"])
                             if(table.include[columnName]){
                                 var newName=((columnName!=columnNewName || self.label.key==columnName)?" as '"+columnNewName+((self.label.key==columnName && self.label.mainTable==tableName)?":ID("+self.label.name+")'":"'"):"");
 
-                                var concat = ((self.label.key==columnName && self.label.mainTable==tableName)?"CONCAT('"+self.label.name.toLowerCase()+"',":"");
-                                var concatEnd = ((self.label.key==columnName && self.label.mainTable==tableName)?")":"");
-                                appendSql(tmp, concat+"`"+tableName+"`.`"+columnName+"`"+concatEnd+newName, ",");
+                                appendSql(tmp, "`"+tableName+"`.`"+columnName+"`"+newName, ",");
                                 appendSql(ass, ((columnName!=columnNewName || self.label.key==columnName)?"'"+columnNewName+((self.label.key==columnName && self.label.mainTable==tableName)?":ID("+self.label.name+")'":"'"):"'"+columnName+"'"), ",");
                             }
                         });
