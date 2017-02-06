@@ -1,40 +1,46 @@
-function appendSql(q, add, div){
-    q.query+=((q.query!="")?div+" ":"")+add;
-}
-angular.module('m2n.selectMysqlTable', ["m2n.neo4j.label"])
+
+angular.module('m2n.selectMysqlTable', [])
     .component('selectTable', {
         templateUrl: '/elements/node/nodeWrapper.html',
         $routeConfig: [
-            {path: '/', name: 'TableList', component: 'tableList', useAsDefault: true},
-            {path: '/columns/:name', name: 'TableColumns', component: 'columnView' },
-            {path: '/buildsql', name: 'BuildSQL', component: 'buildSQL' }
+            {path: '/:label', name: 'TableList', component: 'tableList', useAsDefault: true},
+            {path: '/columns/:label/:name', name: 'TableColumns', component: 'columnView' },
+            {path: '/buildsql/:label', name: 'BuildSQL', component: 'buildSQL' }
         ],
-        controller: ["$interval", 'Label', "$rootRouter", function SelectTableController($interval, label, $rootRouter){
+        controller: ["$interval", "$rootRouter", function SelectTableController($interval, $rootRouter){
             var self = this;
-
-            self.label = label;
-            self.buildSql = function(){
-                $rootRouter.navigate(['/Table', "BuildSQL"]);
-            }
-            $interval(function(){
-                label.save();
-            }, 5000);
+            self.label = new Label();
+            self.$routerOnActivate = function(next) {
+                self.label.open(next.params.label);
+            };
         }]
     })
     .component('tableList', {
         templateUrl: '/elements/node/tables.html',
-        controller: ['$http', 'Label', "$rootRouter", function TableListController($http, label, $rootRouter) {
+        controller: ['$http', "$rootRouter", function TableListController($http, $rootRouter) {
             var self = this;
-            if(label.name==""){
-                $rootRouter.navigate(['/Label']);
-            }
-            self.label = label;
-            self.nextStep = function(r){
-                if(label.mode==1){
-                    label.mainTable=r.table;
-                    label.mode=2;
+
+            self.label = new Label();
+            self.$routerOnActivate = function(next) {
+                self.label.open(next.params.label);
+                if(self.label.name==""){
+                    $rootRouter.navigate(['/Label']);
                 }
-                $rootRouter.navigate(['/Table', "TableColumns", {name: r.table}]);
+            };
+            self.buildSql = function(){
+                self.label.save();
+                $rootRouter.navigate(['/Table', "BuildSQL", {label: self.label.name}]);
+            }
+            self.back = function(){
+                $rootRouter.navigate(['/Label']);
+            };
+            self.nextStep = function(r){
+                if(self.label.mode==1){
+                    self.label.mainTable=r.table;
+                    self.label.mode=2;
+                    self.label.save();
+                }
+                $rootRouter.navigate(['/Table', "TableColumns", {name: r.table, label:self.label.name}]);
             }
             $http.get('/table/list').then(function(response) {
                 self.tables = response.data.tables;
@@ -43,77 +49,35 @@ angular.module('m2n.selectMysqlTable', ["m2n.neo4j.label"])
     })
     .component('columnView', {
         templateUrl: '/elements/node/columns.html',
-        controller: ['$http', 'Label', "$rootRouter", function TableViewController($http, label, $rootRouter) {
+        controller: ['$http', "$rootRouter", function TableViewController($http, $rootRouter) {
             var self = this;
-            self.label = label;
+            self.label = new Label();
             self.columns = {};
             self.$routerOnActivate = function(next) {
                 self.tablename = next.params.name;
+                self.label.open(next.params.label);
                 $http.get('/table/info/'+self.tablename).then(function(response) {
                     self.columns = response.data.columns;
                 });
             }
             self.goToTables = function(){
-                $rootRouter.navigate(['/Table', "TableList"]);
+                $rootRouter.navigate(['/Table', "TableList", {label:self.label.name}]);
+                self.label.save();
             }
-
         }]
     })
     .component('buildSQL', {
         templateUrl: '/elements/node/showSQL.html',
-        controller: ['$http', 'Label', "$rootRouter", function TableListController($http, label, $rootRouter) {
+        controller: ['$http', "$rootRouter", function TableListController($http, $rootRouter) {
             var self = this;
-            self.label = label;
-            var ass={query:""};
-            self.buildProject = function(){
-                var tmp={query:""};
-                ass.query="";
-                angular.forEach(self.label.elements, function(table, tableName) {
-                    if(tableName==self.label.mainTable){
-                        angular.forEach( table.columns, function( columnNewName, columnName){
-                            if(table.include[columnName]){
-                                var newName=((columnName!=columnNewName || self.label.key==columnName)?" as '"+columnNewName+((self.label.key==columnName && self.label.mainTable==tableName)?":ID("+self.label.name+")'":"'"):"");
-
-                                appendSql(tmp, "`"+tableName+"`.`"+columnName+"`"+newName, ",");
-                                appendSql(ass, ((columnName!=columnNewName || self.label.key==columnName)?"'"+columnNewName+((self.label.key==columnName && self.label.mainTable==tableName)?":ID("+self.label.name+")'":"'"):"'"+columnName+"'"), ",");
-                            }
-                        });
-                    }else{
-                        if(table.type=="json"){
-                            var objects = {query:""};
-                            angular.forEach( table.columns, function( columnNewName, columnName){
-                                if(table.include[columnName]){
-                                    appendSql(objects, "'"+columnNewName+"'", ",");
-                                    appendSql(objects, "`"+tableName+"`.`"+columnName+"`", ",");
-                                }
-                            });
-                            appendSql(ass, "'json_"+tableName+"'", ",");
-                            var tmpJSON = "REPLACE(CONCAT('[',(SELECT GROUP_CONCAT(JSON_OBJECT("+objects.query+")) as only FROM `"+tableName+"` WHERE `"+table.reference.split(",")[0]+"`="+self.label.mainTable+"."+table.reference.split(",")[1]+"),']'),'\"', \"'\") as 'json_"+tableName+"'";/* stackoverflow 6660977*/
-                            appendSql(tmp, tmpJSON, ",");
-                        }else if(table.type=="join"){
-                            angular.forEach( table.columns, function( columnNewName, columnName){
-                                if(table.include[columnName]){
-                                    var newName=((columnName!=columnNewName || self.label.key==columnName)?" as '"+columnNewName+((self.label.key==columnName && self.label.mainTable==tableName)?":ID("+self.label.name+")'":"'"):"");
-                                    appendSql(ass, ((columnName!=columnNewName || self.label.key==columnName)?"'"+columnNewName+((self.label.key==columnName && self.label.mainTable==tableName)?":ID("+self.label.name+")'":"'"):"'"+columnName+"'"), ",");
-                                    appendSql(tmp, "`"+tableName+"`.`"+columnName+"`"+newName, ",");
-                                }
-                            });
-                        }
-                    }
-                });
-                return tmp.query;
-            }
-            self.buildFrom = function(){
-                var tmp={query:self.label.mainTable};
-                angular.forEach(self.label.elements, function(table, tableName) {
-                    if(tableName!=self.label.mainTable && table.type=="join"){
-                        appendSql(tmp, " INNER JOIN "+tableName+" ON `"+table.reference.split(",")[0]+"`="+self.label.mainTable+"."+table.reference.split(",")[1], "");
-                    }
-                });
-                return tmp.query;
-            }
-            var projectBuild = self.buildProject();
-            var fromBuild = self.buildFrom();
-            self.sql = "SELECT "+ass.query+" UNION ALL SELECT "+projectBuild+" FROM "+fromBuild+" INTO OUTFILE '/srv/csv/"+self.label.name+".csv' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\n';";
+            self.label = new Label();
+            self.sql = "";
+            self.back = function(){
+                $rootRouter.navigate(['/Table', "TableList", {label: self.label.name}]);
+            };
+            self.$routerOnActivate = function(next) {
+                self.label.open(next.params.label);
+                self.sql = self.label.sql();
+            };
         }]
     });

@@ -7,30 +7,31 @@ angular.module('m2n.labelSettings', ["m2n.neo4j.label"])
     })
     .component('labelName', {
         templateUrl: '/elements/node/createNode.html',
-        controller: [ 'Label', "$rootRouter",
-            function LabelNameController(label, $rootRouter) {
+        controller: ["$rootRouter",
+            function LabelNameController($rootRouter) {
                 var self = this;
-                self.label = label;
                 self.labels = new Array();
 
                 self.open = function(name){
-                    label.open(name);
-                    $rootRouter.navigate(['/Table', "TableList"]);
+                    $rootRouter.navigate(['/Table', "TableList", {label: name}]);
+                }
+                self.back = function(name){
+                    $rootRouter.navigate(['/Select', 'SelectActionDisplay']);
                 }
                 self.start = function(){
-                    label.open(angular.element("#inputLabel").val());
-                    $rootRouter.navigate(['/Table', "TableList"]);
+                    $rootRouter.navigate(['/Table', "TableList", {label: angular.element("#inputLabel").val()}]);
                 }
                 self.removeSave = function (name){
-                    console.log(name);
-                    label.removeSave(name);
+                    new Label().removeSave(name);
                     self.readExisting();
                 }
                 self.readExisting = function(){
                     self.labels = new Array();
                     for(var i in localStorage)
                     {
-                        self.labels.push(JSON.parse(localStorage[i]));
+                        if(i.includes("Node,")){
+                            self.labels.push(JSON.parse(localStorage[i]));
+                        }
                     }
                 }
                 self.readExisting();

@@ -1,8 +1,11 @@
 <div class="panel panel-default topMargin">
     <div class="panel-body">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <h1>Create Relationship</h1>
+            </div>
+            <div class="col-md-6 text-right">
+                <a class="btn btn-primary" ng-click="$ctrl.back();">Go Back</a>
             </div>
         </div>
         <br /><br />
@@ -15,10 +18,17 @@
                             <input type="text" ng-model="$ctrl.title" class="form-control" id="inputRelationship" placeholder="Name">
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-danger" role="alert" id="relname" style="display:none">
+                                You need to enter a relationship name
+                            </div>
+                        </div>
+                    </div>
                     <br />
                     <div class="row">
                         <div class="col-md-6">
-                            <h4>From Node</h4>
+                            <h4>From Label</h4>
                             <div class="list-group">
                                 <a ng-repeat="label in $ctrl.labels" ng-if="label!=$ctrl.objects[1]" ng-click="$ctrl.select(0,label)" class="{{(label==$ctrl.objects[0])?'list-group-item active':'list-group-item'}}">
                                     {{label.name}}
@@ -27,7 +37,7 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <h4>To Node</h4>
+                            <h4>To Label</h4>
                             <div class="list-group">
                                 <a ng-repeat="label in $ctrl.labels" ng-if="label!=$ctrl.objects[0]" ng-click="$ctrl.select(1,label)" class="{{(label==$ctrl.objects[1])?'list-group-item active':'list-group-item'}}">
                                     {{label.name}}
@@ -44,6 +54,23 @@
                     </div>
                 </form>
 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Existing Relationships</h2>
+                <div class="list-group">
+                    <span ng-repeat="rel in $ctrl.relations" class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <span ng-click="$ctrl.open(rel.title);" style="cursor:pointer;">{{rel.title}}</span>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <span ng-click="$ctrl.removeSave(rel.title);" style="cursor:pointer;" class="glyphicon glyphicon-trash"></span>
+                            </div>
+                        </div>
+                    </span>
+                </div>
             </div>
         </div>
     </div>

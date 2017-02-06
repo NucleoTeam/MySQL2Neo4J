@@ -1,34 +1,41 @@
-<div>
-    <a class="btn btn-primary" ng-click="$ctrl.gotoRelationStart()">Back to node selection</a>
-</div>
-<div class="row">
-    <div class="line"><div class="lineInner"></div></div>
-    <h2>Creating Relation - "{{$ctrl.title}}"</h2>
-    <inner ng-repeat="(node,nodeData) in $ctrl.labelData">
-    <div ng-if="$first" class="col-md-4">
-        <h2>From {{$ctrl.labelTitle[node]}}</h2>
-        <div ng-repeat="(tableName,table) in nodeData">
-            <h3>{{tableName}}</h3>
-            <div class="list-group">
-                <a class="list-group-item connection{{$ctrl.labels[$ctrl.labelTitle[node]].key==column.name?' active':''}}" ng-click="$ctrl.leftSide($event, this);" ng-repeat="column in table">
-                    {{column.name}}<span style="float:right;" ng-if="$ctrl.labels[$ctrl.labelTitle[node]].elements[tableName].columns[column.name]"> [ {{$ctrl.labels[$ctrl.labelTitle[node]].elements[tableName].columns[column.name]}} ]</span>
-                    <span style="color:#{{$ctrl.labels[$ctrl.labelTitle[node]].key==column.name?'3dae62':'cdcdcd'}}" ng-if="$ctrl.labels[$ctrl.labelTitle[node]].key==column.name"  class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
-                </a>
+<div class="panel panel-default topMargin">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Creating Relation - "{{$ctrl.rel.title}}"</h2>
+            </div>
+            <div class="col-md-6 text-right">
+                <a class="btn btn-primary" ng-click="$ctrl.gotoRelationStart()">Back to node selection</a> <a class="btn btn-info" ng-click="$ctrl.build()">Build SQL</a>
             </div>
         </div>
-    </div>
-    <div ng-if="!$first" class="col-md-4 col-md-offset-4">
-        <h2>To {{$ctrl.labelTitle[node]}}</h2>
-        <div ng-repeat="(tableName,table) in nodeData">
-            <h3>{{tableName}}</h3>
-            <div class="list-group">
-                <a class="list-group-item connection" ng-repeat="column in table" ng-click="$ctrl.rightSide($event, this);">
-                    {{column.name}}<span style="float:right;" ng-if="$ctrl.labels[$ctrl.labelTitle[node]].elements[tableName].columns[column.name]"> [ {{$ctrl.labels[$ctrl.labelTitle[node]].elements[tableName].columns[column.name]}} ]</span>
-                    <span style="color:#{{$ctrl.labels[$ctrl.labelTitle[node]].key==column.name?'3dae62':'cdcdcd'}}" ng-if="$ctrl.labels[$ctrl.labelTitle[node]].key==column.name"  class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
-                </a>
-            </div>
+        <div class="row">
+            <div class="line"><div class="lineInner"></div></div>
+            <inner ng-repeat="(node,nodeData) in $ctrl.labelData">
+                <div ng-if="$first" class="col-md-4">
+                    <h2>From {{$ctrl.rel.labels[node]}}</h2>
+                    <div ng-repeat="(tableName,table) in nodeData">
+                        <h3>{{tableName}}</h3>
+                        <div class="list-group">
+                            <a ng-repeat="column in table" class="list-group-item connection {{(($ctrl.labels[$ctrl.rel.labels[node]].key==column.name && $ctrl.labels[$ctrl.rel.labels[node]].mainTable==tableName)?'active':'')}} {{(($ctrl.rel.connection.left[0]==tableName && $ctrl.rel.connection.left[1]==column.name)?'list-group-item-success':'')}}" i="left-{{tableName}}-{{column.name}}"; ng-click="$ctrl.leftSide($event, this, tableName, column.name);">
+                                {{column.name}}<span style="float:right;" ng-if="$ctrl.labels[$ctrl.rel.labels[node]].elements[tableName].columns[column.name]"> [ {{$ctrl.labels[$ctrl.rel.labels[node]].elements[tableName].columns[column.name]}} ]</span>
+                                <span style="color:#3dae62" ng-if="$ctrl.labels[$ctrl.rel.labels[node]].key==column.name"  class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="!$first" class="col-md-4 col-md-offset-4">
+                    <h2>To {{$ctrl.rel.labels[node]}}</h2>
+                    <div ng-repeat="(tableName,table) in nodeData">
+                        <h3>{{tableName}}</h3>
+                        <div class="list-group">
+                            <a ng-repeat="column in table" class="list-group-item connection {{(($ctrl.labels[$ctrl.rel.labels[node]].key==column.name && $ctrl.labels[$ctrl.rel.labels[node]].mainTable==tableName)?'active':'')}} {{(($ctrl.rel.connection.right[0]==tableName && $ctrl.rel.connection.right[1]==column.name)?'list-group-item-success':'')}}" i="right-{{tableName}}-{{column.name}}" ng-click="$ctrl.rightSide($event, this, tableName, column.name);">
+                                {{column.name}}<span style="float:right;" ng-if="$ctrl.labels[$ctrl.rel.labels[node]].elements[tableName].columns[column.name]"> [ {{$ctrl.labels[$ctrl.rel.labels[node]].elements[tableName].columns[column.name]}} ]</span>
+                                <span style="color:#3dae62" ng-if="$ctrl.labels[$ctrl.rel.labels[node]].key==column.name"  class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </inner>
         </div>
     </div>
-    </inner>
-
 </div>

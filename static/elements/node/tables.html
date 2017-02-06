@@ -1,7 +1,19 @@
-<div class="list-group">
-    <a ng-repeat="table in $ctrl.tables" ng-click="$ctrl.nextStep(this);"
-       class="{{$ctrl.label.elements[table]? 'list-group-item active':'list-group-item'}}">
-        {{table}}
-        <span class="badge">{{$ctrl.label.elements[table]? $ctrl.label.elements[table].columnCount : 0}}</span>
-    </a>
+<div class="row">
+    <div class="col-md-6">
+        <h2>SQL Tables</h2>
+    </div>
+    <div class="col-md-6 text-right">
+        <a class="btn btn-primary" ng-click="$ctrl.back();">Go Back</a> <a class="btn btn-info" ng-click="$ctrl.buildSql()">Build SQL</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="list-group">
+            <a ng-repeat="table in $ctrl.tables" ng-click="$ctrl.nextStep(this);"
+               class="{{$ctrl.label.elements[table]? 'list-group-item active':'list-group-item'}}">
+                {{table}}
+                <span class="badge">{{$ctrl.label.elements[table]? $ctrl.label.elements[table].columnCount : 0}}</span>
+            </a>
+        </div>
+    </div>
 </div>
