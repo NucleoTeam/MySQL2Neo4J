@@ -203,7 +203,7 @@ function Relationship($q){
         var leftLabel = self.left();
         var rightLabel = self.right();
 
-        finalSQL += "'START_ID("+self.labels[0]+")', 'END_ID("+self.labels[1]+")' UNION ALL SELECT ";
+        finalSQL += "':START_ID("+self.labels[0]+")', ':END_ID("+self.labels[1]+")' UNION ALL SELECT ";
 
         // left projection
         finalSQL += "`l`.`"+labelToNewName(leftLabel, leftLabel.mainTable, leftLabel.key)+"` as 'START_ID("+self.labels[0]+")'";
