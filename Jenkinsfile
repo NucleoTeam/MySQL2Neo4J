@@ -24,8 +24,8 @@ pipeline {
             sh 'mkdir dockerbuild/'
             sh 'cp build/libs/*.jar dockerbuild/app.jar'
             sh 'cp Dockerfile dockerbuild/Dockerfile'
-            sh 'cp static dockerbuild/static'
-            sh 'cp www dockerbuild/www'
+            sh 'cp -r static dockerbuild/static'
+            sh 'cp -r www dockerbuild/www'
             sh 'cd dockerbuild/'
             sh "docker build -t nucleoteam/m2n:${env.BUILD_NUMBER} ./"
             script {
