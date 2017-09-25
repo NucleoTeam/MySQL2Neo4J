@@ -2,10 +2,10 @@
     <div class="col-md-6">
         <h2>{{$ctrl.tablename}}</h2>
     </div>
-    <div ng-if="$ctrl.label.elements[$ctrl.tablename]" class="col-md-6">
+    <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div class="col-md-6">
+                <div class="col-md-6" ng-if="$ctrl.label.elements[$ctrl.tablename]">
                     Table join type
                     <select ng-model="$ctrl.label.elements[$ctrl.tablename].type">
                         <option value="join">string [1 to 1]</option>

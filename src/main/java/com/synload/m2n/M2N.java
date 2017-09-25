@@ -20,7 +20,11 @@ import java.sql.DriverManager;
 public class M2N  extends SpringBootServletInitializer {
     public static Connection connect;
     public static void main(String[] args) throws Exception{
-        connect = DriverManager.getConnection("jdbc:mysql://192.168.0.33/api?user=root&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8");
+        String server = System.getenv("MYSQL_SERVER");
+        String user = System.getenv("MYSQL_USER");
+        String pass = System.getenv("MYSQL_PASS");
+        String db = System.getenv("MYSQL_DB");
+        connect = DriverManager.getConnection("jdbc:mysql://"+server+"/"+db+"?zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8", user, pass);
         SpringApplication.run(M2N.class,args);
     }
     @Override

@@ -30,7 +30,7 @@
                         <div class="col-md-6">
                             <h4>From Label</h4>
                             <div class="list-group">
-                                <a ng-repeat="label in $ctrl.labels" ng-if="label!=$ctrl.objects[1]" ng-click="$ctrl.select(0,label)" class="{{(label==$ctrl.objects[0])?'list-group-item active':'list-group-item'}}">
+                                <a ng-repeat="label in $ctrl.labels" ng-click="$ctrl.select(0,label)" class="{{(label==$ctrl.objects[0])?'list-group-item active':'list-group-item'}}">
                                     {{label.name}}
                                     <span class="badge">{{(label==$ctrl.objects[0])?"selected":"not selected"}}</span>
                                 </a>
@@ -39,7 +39,7 @@
                         <div class="col-md-6">
                             <h4>To Label</h4>
                             <div class="list-group">
-                                <a ng-repeat="label in $ctrl.labels" ng-if="label!=$ctrl.objects[0]" ng-click="$ctrl.select(1,label)" class="{{(label==$ctrl.objects[1])?'list-group-item active':'list-group-item'}}">
+                                <a ng-repeat="label in $ctrl.labels" ng-click="$ctrl.select(1,label)" class="{{(label==$ctrl.objects[1])?'list-group-item active':'list-group-item'}}">
                                     {{label.name}}
                                     <span class="badge">{{(label==$ctrl.objects[1])?"selected":"not selected"}}</span>
                                 </a>
