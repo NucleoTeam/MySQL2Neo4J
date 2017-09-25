@@ -26,8 +26,7 @@ pipeline {
             sh 'cp Dockerfile dockerbuild/Dockerfile'
             sh 'cp -r static dockerbuild/static'
             sh 'cp -r www dockerbuild/www'
-            sh 'cd dockerbuild/'
-            sh "docker build -t nucleoteam/m2n:${env.BUILD_NUMBER} ./"
+            sh "cd dockerbuild/;docker build -t nucleoteam/m2n:${env.BUILD_NUMBER} ./"
             script {
               echo "[${env.JOB_NAME} #${env.BUILD_NUMBER}] Built Docker image"
             }
